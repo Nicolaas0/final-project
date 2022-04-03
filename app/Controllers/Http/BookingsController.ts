@@ -128,7 +128,7 @@ export default class BookingsController {
             await auth.use('api').authenticate()
             await request.validate(BookingValidator)
             const id = await auth.user!.id
-            const newBooking = await Booking.create({
+            await Booking.create({
                 user_id: id,
                 play_date_start: request.input('play_date_start'),
                 play_date_end: request.input('play_date_end'),
@@ -143,7 +143,7 @@ export default class BookingsController {
     public async UpdateBooking({ request, response, params, auth }: HttpContextContract) {
         try {
             await auth.use('api').authenticate()
-            const data = await request.validate(BookingValidator)
+            await request.validate(BookingValidator)
             const booking = await Booking.findOrFail(params.id)
             const id = await auth.user!.id
             booking.merge({
