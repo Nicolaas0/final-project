@@ -112,7 +112,7 @@ export default class UsersController {
             const email = request.input('email')
             const newUser = await User.create(data)
             const otp_code = Math.floor(100000 + Math.random() * 900000)
-            let saveCode = await Database.table('otp_codes').insert({ otp_code: otp_code, user_id: newUser.id })
+             await Database.table('otp_codes').insert({ otp_code: otp_code, user_id: newUser?.id })
             await Mail.send((message) => {
                 message
                     .from('admin@todoapi.com')
@@ -152,7 +152,7 @@ export default class UsersController {
         let otpCheck = await Database.query().from('otp_codes').where('otp_code', otp_code).first()
 
         if (user?.id == otpCheck.user_id) {
-            user.isVerified = true
+            user!.isVerified = true
             await user?.save()
         } else {
             return response.status(400).json({ message: 'gagal konfirmasi OTP' })
